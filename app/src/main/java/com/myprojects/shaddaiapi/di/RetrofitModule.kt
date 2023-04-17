@@ -2,6 +2,7 @@ package com.myprojects.shaddaiapi.di
 
 import com.myprojects.shaddaiapi.data.remote.ShaddaiApi
 import com.myprojects.shaddaiapi.util.Constants.Companion.BASE_URL
+import com.myprojects.shaddaiapi.util.Constants.Companion.BASE_URL_localhost
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

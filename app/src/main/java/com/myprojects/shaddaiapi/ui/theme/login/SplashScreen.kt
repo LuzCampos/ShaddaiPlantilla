@@ -13,13 +13,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.myprojects.shaddaiapi.R
 import com.myprojects.shaddaiapi.navigation.AppScreens
+import com.myprojects.shaddaiapi.ui.theme.home.HomeScreen
 import kotlinx.coroutines.delay
 
 
 @Composable
-fun SplashScreen(){
+fun SplashScreen(navController: NavController){
     LaunchedEffect(key1 = true ){
         delay(3000)
+        navController.popBackStack()
+        navController.navigate("login")
     }
     Splash()
 }

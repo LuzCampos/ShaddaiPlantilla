@@ -20,7 +20,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.myprojects.shaddaiapi.domain.CartItem
 import com.myprojects.shaddaiapi.domain.ProductItem
 import com.myprojects.shaddaiapi.ui.theme.GreenCustom
 import com.myprojects.shaddaiapi.ui.theme.circularstdblack
@@ -28,9 +30,16 @@ import com.myprojects.shaddaiapi.ui.theme.circularstdbold
 import com.myprojects.shaddaiapi.ui.theme.circularstdbook
 
 @Composable
-fun HomeGrid(products: List<ProductItem>){
+fun HomeGrid(products: List<ProductItem>,navController: NavController,context: Context = LocalContext.current.applicationContext
+//             viewModelCart : CarritoViewModel
+//cartViewModel:CartViewModel
+){
+
+
+   // val cartItems = cartViewModel.cartItems
+
     LazyVerticalGrid(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().height(600.dp),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp) ,
         columns = GridCells.Fixed( 2),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -45,13 +54,41 @@ fun HomeGrid(products: List<ProductItem>){
             )
         }
         items(products) { product: ProductItem ->
-            CardProduct(productItem = product)
+            CardProduct(productItem = product,navController,
+            //    onAddClicked = { viewModelCart.addProduct(product) }
+            onAddCart = {
+                Toast.makeText(context, "Click", Toast.LENGTH_SHORT)
+                    .show()
+               /* fun addToCart(productItem: ProductItem) {
+                    val cartItem = CartItem(
+                        name = productItem.name,
+                        price = productItem.price,
+                        cantidad = 1
+                    )
+                    val index = cartItems.indexOfFirst { it.name == cartItem.name }
+                    if (index == -1) {
+                        cartItems.add(cartItem)
+                    } else {
+                        cartItems[index].cantidad += 1
+                    }
+                }*/
+            },
+                context = context
+            )
         }
     }
+
+
 }
 
+
+
 @Composable
-fun CardProduct(productItem: ProductItem, context: Context = LocalContext.current.applicationContext){
+fun CardProduct(productItem: ProductItem,
+                navController : NavController,
+                //onAddClicked: () -> Unit,
+                onAddCart: () -> Unit,
+                context: Context = LocalContext.current.applicationContext){
     Card(shape = RoundedCornerShape(10.dp),
         backgroundColor = Color.White,
         elevation = 5.dp,
@@ -60,6 +97,7 @@ fun CardProduct(productItem: ProductItem, context: Context = LocalContext.curren
                 Toast
                     .makeText(context, "Click", Toast.LENGTH_SHORT)
                     .show()
+                navController.navigate("detailproduct" + "/${productItem._id}")
             }
             .size(width = 100.dp, height = 280.dp)
     ) {
@@ -67,13 +105,17 @@ fun CardProduct(productItem: ProductItem, context: Context = LocalContext.curren
             AsyncImage(model = productItem.photo
                 ,contentScale = ContentScale.Fit
                 ,contentDescription = "productimg")
-            textandbutton(productItem = productItem)
+            textandbutton(productItem = productItem,
+            //    onAddClicked
+            onAddCart
+
+            )
         }
     }
 }
 
 @Composable
-fun textandbutton(productItem: ProductItem){
+fun textandbutton(productItem: ProductItem, onAddCart : () -> Unit){
     Row(modifier = Modifier.padding(20.dp)) {
         Column(modifier = Modifier
             .weight(1f)
@@ -97,7 +139,7 @@ fun textandbutton(productItem: ProductItem){
             )
         }
         IconButton(
-            onClick = { },
+            onClick =  onAddCart,
             modifier = Modifier.background(
                 color = Color(0xff0DA54B),
                 shape = RoundedCornerShape(10.dp)
